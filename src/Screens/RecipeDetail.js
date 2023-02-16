@@ -11,7 +11,7 @@ const RecipeDetail = ({navigation}) => {
     const [ingredients, setIngredients] = useState([])
 
     const getRecipeDetail = () => {
-        const apiURL = "https://www.themealdb.com/api/json/v1/1/lookup.php?i="+(`${id}`)
+        const apiURL = "https://www.themealdb.com/api/json/v1/1/lookup.php?i="+(`${id}`);
         fetch(apiURL)
         .then((response) => response.json())
         .then((responseJson) => {
