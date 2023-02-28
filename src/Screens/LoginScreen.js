@@ -2,7 +2,7 @@ import react, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image, ImageBackground, KeyboardAvoidingView } from "react-native";
 import {withNavigation, SafeAreaView} from 'react-navigation'
 import { Assets } from "react-navigation-stack";
-import {firebaseConfig} from "../Screens/Firebase"
+
 
 
 const LoginScreen = ({navigation}) => {
