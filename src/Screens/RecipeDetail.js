@@ -2,7 +2,6 @@ import react, {useState, useEffect} from "react";
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, SafeAreaView} from "react-native";
 import {WebView} from 'react-native-webview';
 import {withNavigation} from 'react-navigation'
-// import BackButton from "../Components/BackButton";
 
 
 const RecipeDetail = ({navigation}) => {
@@ -27,7 +26,7 @@ const RecipeDetail = ({navigation}) => {
     }, [])
   console.log(singleRecipeDetail.idMeal)
     return <SafeAreaView>
-        {/* <BackButton/> */}
+    
         <ScrollView>
         <Text style={styles.recipeName}> {singleRecipeDetail.strMeal}</Text>
         <Image style={styles.image}
@@ -39,10 +38,8 @@ const RecipeDetail = ({navigation}) => {
         <Text style={styles.recipeInstructionText}>{singleRecipeDetail.strInstructions}</Text>
         <TouchableOpacity 
         onPress={() => navigation.navigate('WebViewScreen', {urlLink: singleRecipeDetail.strYoutube})}>
-        <Text style={styles.youtubeLink}> Youtube link: {singleRecipeDetail.strYoutube}</Text>
-
+       {singleRecipeDetail.strYoutube ?  <Text style={styles.youtubeLink}> Youtube link: {singleRecipeDetail.strYoutube}</Text> : null}
         </TouchableOpacity>
-        
         </ScrollView>
     </SafeAreaView>
 };

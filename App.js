@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import {createAppContainer} from 'react-navigation'
 import {createStackNavigator} from 'react-navigation-stack'
@@ -7,8 +8,7 @@ import CategoryDetail from './src/Screens/CategoryDetail';
 import LoginScreen from './src/Screens/LoginScreen';
 import WebViewScreen from './src/Screens/Webview';
 import LaunchScreen from './src/Screens/LaunchScreen';
-import { NavigationContainer } from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+
 
 const navigator = createStackNavigator(
 
@@ -37,19 +37,3 @@ const navigator = createStackNavigator(
 export default createAppContainer(navigator);
 
 
-// const Stack = createNativeStackNavigator();
-
-// const MyStack = () => {
-//   return (
-//     <NavigationContainer>
-//       <Stack.Navigator>
-//         <Stack.Screen
-//           name="Home"
-//           component={HomeScreen}
-//           options={{title: 'Welcome'}}
-//         />
-//         <Stack.Screen name="Profile" component={ProfileScreen} />
-//       </Stack.Navigator>
-//     </NavigationContainer>
-//   );
-// };

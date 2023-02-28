@@ -1,7 +1,8 @@
 import react, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image, ImageBackground } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image, ImageBackground, KeyboardAvoidingView } from "react-native";
 import {withNavigation, SafeAreaView} from 'react-navigation'
 import { Assets } from "react-navigation-stack";
+import {firebaseConfig} from "../Screens/Firebase"
 
 
 const LoginScreen = ({navigation}) => {
@@ -18,7 +19,9 @@ stringMatched = true
         console.log("button disabled.......")
     }
 }
-    return <View style={styles.container}>
+    return (
+    
+    <View style={styles.container}>
       
             <ImageBackground style={styles.backgroundImage}
             source={require('../Images/foodImage.jpg')}
@@ -33,7 +36,7 @@ stringMatched = true
         <View style={styles.viewEmailTextInput}>
         <TextInput 
         style={styles.emailTextInputStyle}
-        onChangeText={setEmail}
+        onChangeText={text => setEmail(text)}
         value={email}
         placeholder="email"
         placeholderTextColor="#B0B0B0"
@@ -42,10 +45,11 @@ stringMatched = true
 <View style={styles.viewPasswordTextInput}>
          <TextInput 
         style={styles.passwordTextInputStyle}
-        onChangeText={setPassword}
+        onChangeText={text => setPassword(text)}
         value={password}
         placeholder="password"
         placeholderTextColor="#B0B0B0"
+        secureTextEntry
         />
         </View>
         </View>
@@ -64,6 +68,7 @@ stringMatched = true
         
      
     </View>
+    )
 };
 
 const styles = StyleSheet.create({
