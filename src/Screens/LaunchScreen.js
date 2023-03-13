@@ -23,6 +23,16 @@ const LaunchScreen = ({navigation}) => {
 
         </TouchableOpacity>
         </View>
+        <View style={styles.registerView}>
+        <TouchableOpacity
+        style={styles.registerButtonStyle}  
+        onPress={() => navigation.navigate('SignUpScreen') }
+        >
+            <Text style={styles.registerButtonText}>REGISTER</Text>
+            
+        </TouchableOpacity>
+        </View>
+     
     </View>
 };
 
@@ -68,11 +78,33 @@ const styles = StyleSheet.create({
         
         alignSelf: "center",
     },
+    registerButtonText: {
+        // textAlign: "center",
+        fontSize: 18,
+        fontWeight: "bold",
+        color: "#FFAC1C",
+        
+        alignSelf: "center",
+    },
     name: {
         color: "#ffff",
         fontSize: 40,
         marginTop: 400,
-        marginBottom: 20
+        marginBottom: 20,
+       
+    },
+    registerView: {
+        marginTop: 10
+       
+    },
+    registerButtonStyle: {
+        width: 300,
+        height: 50,
+        backgroundColor: "#ffff",
+        borderRadius: 10,
+        // paddingTop: 10,
+        justifyContent: "center"
+       
     }
 });
 
