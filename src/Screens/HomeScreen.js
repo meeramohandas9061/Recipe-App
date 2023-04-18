@@ -12,7 +12,7 @@ import {
 import RecipeTile from "../Components/RecipeTile";
 import RecipeCategory from "../Components/RecipeCategory";
 import SearchBar from "../Components/SearchBar";
-import { auth } from "../Screens/Firebase";
+import { auth } from "../Services/Firebase";
 import AreaList from "../Components/AreaList";
 import IngredientsList from "../Components/Ingredients List";
 
@@ -102,7 +102,7 @@ const HomeScreen = ({ navigation }) => {
         <TouchableOpacity style={styles.logoutButton} onPress={() => signOut()}>
           <Image
             style={styles.logoutImage}
-            source={require("../Images/logout.jpeg")}
+            source={require("../../assets/Images/logout.png")}
           />
         </TouchableOpacity>
         <Text style={styles.username}>Hi!</Text>
@@ -116,12 +116,13 @@ const HomeScreen = ({ navigation }) => {
         <RecipeTile data={recipes} />
 
         <View style={[styles.ingredientsView, styles.shadowProp]}>
-          <TouchableOpacity onPress={() => navigation
-        .navigate('IngredientScreen')}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("IngredientScreen")}
+          >
             <ImageBackground
               style={styles.IngredientImage}
               imageStyle={{ borderRadius: 20 }}
-              source={require("../Images/food1.jpg")}
+              source={require("../../assets/Images/food1.jpg")}
             >
               <Text style={styles.ingredientsText}>Popular Ingredients</Text>
             </ImageBackground>
@@ -155,9 +156,10 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   logoutImage: {
-    height: 50,
-    width: 50,
+    height: 30,
+    width: 30,
     borderRadius: 25,
+    marginRight: 10,
   },
   logoutButton: {
     marginTop: 70,

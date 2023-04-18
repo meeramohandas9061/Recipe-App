@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { withNavigation, SafeAreaView } from "react-navigation";
 import { Assets } from "react-navigation-stack";
-import { auth } from "../Screens/Firebase";
+import { auth } from "../Services/Firebase";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -46,16 +46,16 @@ const LoginScreen = ({ navigation }) => {
       });
   };
 
-//   useEffect(() => {
-//     const unSubscribe = auth.onAuthStateChanged((user) => {
-//       if (user) {
-//         navigation.navigate("Home");
-//       } else {
-//         alert();
-//       }
-//     });
-//     return unSubscribe;
-//   }, []);
+  //   useEffect(() => {
+  //     const unSubscribe = auth.onAuthStateChanged((user) => {
+  //       if (user) {
+  //         navigation.navigate("Home");
+  //       } else {
+  //         alert();
+  //       }
+  //     });
+  //     return unSubscribe;
+  //   }, []);
   return (
     <View style={styles.container}>
       {/* <ImageBackground style={styles.backgroundImage}

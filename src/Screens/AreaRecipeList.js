@@ -6,6 +6,7 @@ import {
   FlatList,
   Image,
   ImageBackground,
+  TouchableOpacity
 } from "react-native";
 import { withNavigation } from "react-navigation";
 import { FlatGrid } from "react-native-super-grid";
@@ -41,14 +42,18 @@ const AreaRecipeList = ({ navigation }) => {
       data={areaRecipes}
       renderItem={({ item }) => (
         <View style={[styles.itemContainer, styles.shadowProp]}>
+          <TouchableOpacity onPress={() => navigation.navigate('RecipeDetailScreen', {id: item.idMeal})}>
           <ImageBackground
-            style={styles.image}
-            source={{ uri: item.strMealThumb }}
-          >
-            <View style={styles.titleView}>
-              <Text style={styles.titleName}>{item.strMeal}</Text>
-            </View>
-          </ImageBackground>
+          
+          style={styles.image}
+          source={{ uri: item.strMealThumb }}
+        >
+          <View style={styles.titleView}>
+            <Text style={styles.titleName}>{item.strMeal}</Text>
+          </View>
+        </ImageBackground>
+                </TouchableOpacity>
+       
         </View>
       )}
     />

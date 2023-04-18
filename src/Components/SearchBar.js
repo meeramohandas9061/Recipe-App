@@ -14,6 +14,7 @@ const SearchBar = ({searchTerm, onChangeText, ontermSubmit}) => {
         value={searchTerm}
         onChangeText={onChangeText}
         onEndEditing={ontermSubmit}
+        clearButtonMode="always"
         />
     </View>
 };

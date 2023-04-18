@@ -1,4 +1,3 @@
-
 // Import the functions you need from the SDKs you need
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
@@ -12,17 +11,17 @@ const firebaseConfig = {
   projectId: "recipeapp-3c892",
   storageBucket: "recipeapp-3c892.appspot.com",
   messagingSenderId: "878023345696",
-  appId: "1:878023345696:web:babfadcf5ec50dce69de45"
+  appId: "1:878023345696:web:babfadcf5ec50dce69de45",
 };
 
 // Initialize Firebase
 let app;
 if (firebase.apps.length === 0) {
-    app = firebase.initializeApp(firebaseConfig);
+  app = firebase.initializeApp(firebaseConfig);
 } else {
-    app = firebase.app()
+  app = firebase.app();
 }
 
-const auth = firebase.auth()
+const auth = firebase.auth();
 
-export {auth};
+export { auth };
