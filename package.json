@@ -27,6 +27,7 @@
     "react-native-animated-loader": "^1.0.0",
     "react-native-gesture-handler": "~2.8.0",
     "react-native-keychain": "^8.1.1",
+    "react-native-like-button": "^1.0.0",
     "react-native-linear-gradient": "^2.6.2",
     "react-native-modal": "^13.0.1",
     "react-native-reanimated": "~2.12.0",
