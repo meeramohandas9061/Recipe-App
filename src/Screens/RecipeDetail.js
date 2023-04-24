@@ -33,7 +33,7 @@ const RecipeDetail = ({ navigation }) => {
   const [showAppOptions, setShowAppOptions] = useState(false);
   // const [like, setLike] = useState(false);
   const [likes, setLikes] = useState([]);
-  const likeCountText = "";
+  const [likeCount, setLikeCount] = useState(0);
 
   const getRecipeDetail = () => {
     const apiURL =
@@ -74,18 +74,16 @@ const RecipeDetail = ({ navigation }) => {
   };
 
   const getLIkesCount = () => {
-    for (const getLike of likes) {
-      console.log("////////////////////", getLike);
-      if (getLike.item_id === id) {
-        likeCountText = getLike.likes;
-      } else {
-        console.log("something went wrong");
-      }
+    const found = likes.find((like) => {
+      return like.item_id === id;
+    });
+    if (found) {
+      setLikeCount(found.likes);
     }
   };
 
   const handleLike = async () => {
-    postLike(id);
+    await postLike(id);
     console.log("id of currently visible item", id);
     const likes = await getLikes();
     console.log("likes", likes);
@@ -153,13 +151,17 @@ const RecipeDetail = ({ navigation }) => {
               />
               <Text style={styles.ingredientTitle}>Main Ingredients: </Text>
               <View style={styles.likeLayoutButtonContainer}>
-                <TouchableOpacity onPress={handleLike}>
+                <TouchableOpacity
+                  onPress={async () => {
+                    await handleLike();
+                  }}
+                >
                   <Image
                     style={styles.likeView}
                     source={require("../../assets/Images/likePlain.png")}
                   />
                 </TouchableOpacity>
-                <Text style={styles.likeCount}>{likeCountText}</Text>
+                <Text style={styles.likeCount}>{likeCount}</Text>
               </View>
 
               <Text style={styles.ingredents}>
