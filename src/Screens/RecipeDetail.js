@@ -34,7 +34,6 @@ const RecipeDetail = ({ navigation }) => {
   // const [like, setLike] = useState(false);
   const [likes, setLikes] = useState([]);
   const likeCountText = "";
-  var getLikesResponseData = [];
 
   const getRecipeDetail = () => {
     const apiURL =
@@ -85,12 +84,12 @@ const RecipeDetail = ({ navigation }) => {
     }
   };
 
-  const handleLike = () => {
+  const handleLike = async () => {
     postLike(id);
     console.log("id of currently visible item", id);
-    getLikesResponseData = getLikes();
+    const likes = await getLikes();
     console.log("getLikesResponseData", getLikesResponseData);
-    setLikes(getLikesResponseData);
+    setLikes(likes);
     getLIkesCount();
   };
 
@@ -105,7 +104,12 @@ const RecipeDetail = ({ navigation }) => {
   useEffect(() => {
     getRecipeDetail();
     getComments(id);
-    getLikesResponseData = getLikes();
+    // getLikesResponseData = getLikes();
+    (async () => {
+      const likes = await getLikes();
+      console.log("likes", likes);
+      setLikes(likes);
+    })();
     getLIkesCount();
   }, []);
 
