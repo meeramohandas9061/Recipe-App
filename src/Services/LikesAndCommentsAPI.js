@@ -3,7 +3,7 @@ const url =
 
 const getLikes = async () => {
   const responseData = await fetch(url);
-  const responseJSON = responseData.json();
+  const responseJSON = await responseData.json();
   console.log("get comment response data********************", responseJSON);
   return responseJSON;
 };
@@ -44,6 +44,7 @@ const postLike = async (itemId) => {
   );
   const responseText = await response.text();
   console.log("Like recipe response data********************", responseText);
+  console.log("itemId", itemId);
   return responseText;
 };
 
