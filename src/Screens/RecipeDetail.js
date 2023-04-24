@@ -88,7 +88,7 @@ const RecipeDetail = ({ navigation }) => {
     postLike(id);
     console.log("id of currently visible item", id);
     const likes = await getLikes();
-    console.log("getLikesResponseData", getLikesResponseData);
+    console.log("likes", likes);
     setLikes(likes);
     getLIkesCount();
   };
