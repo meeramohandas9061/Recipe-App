@@ -80,11 +80,13 @@ const RecipeDetail = ({ navigation }) => {
     if (found) {
       setLikeCount(found.likes);
     }
+    console.log("found", found);
   };
 
   const handleLike = async () => {
     await postLike(id);
     console.log("id of currently visible item", id);
+    console.log(typeof id);
     const likes = await getLikes();
     console.log("likes", likes);
     setLikes(likes);

@@ -2,7 +2,9 @@ const url =
   "https://us-central1-involvement-api.cloudfunctions.net/capstoneApi/apps/TVh1v8c5aHUNyfocTFww/likes";
 
 const getLikes = async () => {
-  const responseData = await fetch(url);
+  const responseData = await fetch(
+    "https://us-central1-involvement-api.cloudfunctions.net/capstoneApi/apps/YDk6ZvYJ9bRgBt60cLN9/likes"
+  );
   const responseJSON = await responseData.json();
   console.log("get comment response data********************", responseJSON);
   return responseJSON;
