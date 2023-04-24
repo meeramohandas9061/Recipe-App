@@ -1,4 +1,4 @@
-import react, { useState, useEffect } from "react";
+import react, { useState, useEffect, useCallback, useRef } from "react";
 import {
   View,
   Text,
@@ -9,11 +9,17 @@ import {
   SafeAreaView,
   FlatList,
   TextInput,
+  KeyboardAvoidingView,
 } from "react-native";
 import { WebView } from "react-native-webview";
 import { withNavigation } from "react-navigation";
 import { Dimensions } from "react-native";
-import { postComment, postLike } from "../Services/LikesAndCommentsAPI";
+import {
+  getLikes,
+  postComment,
+  postLike,
+} from "../Services/LikesAndCommentsAPI";
+import { theamColor } from "../Utils/Global";
 
 const RecipeDetail = ({ navigation }) => {
   let id = navigation.getParam("id");
@@ -23,6 +29,12 @@ const RecipeDetail = ({ navigation }) => {
   const [comments, setComments] = useState([]);
   const [commenterName, setCommenterName] = useState("");
   const [comment, setComment] = useState("");
+  const [isPosted, setPosted] = useState(false);
+  const [showAppOptions, setShowAppOptions] = useState(false);
+  // const [like, setLike] = useState(false);
+  const [likes, setLikes] = useState([]);
+  const likeCountText = "";
+  var getLikesResponseData = [];
 
   const getRecipeDetail = () => {
     const apiURL =
@@ -46,8 +58,10 @@ const RecipeDetail = ({ navigation }) => {
     fetch(url)
       .then((response) => response.json())
       .then((responseJson) => {
-        setComments(responseJson);
-        console.log("error dataaaaa........", responseJson);
+        if (!responseJson.error) {
+          setComments(responseJson);
+        }
+        console.log("getComments response dataaaaa........", responseJson);
       })
       .catch((error) => {
         alert(error);
@@ -55,77 +69,129 @@ const RecipeDetail = ({ navigation }) => {
   };
 
   const handleOnPress = (id, commenterName, comment) => {
-    postComment(id, commenterName, comment);
-    getComments(id);
+    postComment(id, commenterName, comment, setPosted);
+    setCommenterName("");
+    setComment("");
   };
-  useEffect(() => {}, [comments]);
+
+  const getLIkesCount = () => {
+    for (const getLike of likes) {
+      console.log("////////////////////", getLike);
+      if (getLike.item_id === id) {
+        likeCountText = getLike.likes;
+      } else {
+        console.log("something went wrong");
+      }
+    }
+  };
+
+  const handleLike = () => {
+    postLike(id);
+    console.log("id of currently visible item", id);
+    getLikesResponseData = getLikes();
+    console.log("getLikesResponseData", getLikesResponseData);
+    setLikes(getLikesResponseData);
+    getLIkesCount();
+  };
+
+  useEffect(() => {
+    console.log("isposted...................", isPosted);
+    if (isPosted) {
+      getComments(id);
+      setPosted(false);
+    }
+  }, [isPosted]);
+
   useEffect(() => {
     getRecipeDetail();
     getComments(id);
+    getLikesResponseData = getLikes();
+    getLIkesCount();
   }, []);
 
   console.log(singleRecipeDetail);
   return (
     // <SafeAreaView style={{ backgroundColor: "#ffff", flex: 1 }}>
-    <FlatList
-      data={comments}
-      // horizontal={true}
-      keyExtractor={(results) => results.comment}
-      renderItem={({ item }) => {
-        return (
-          <View style={styles.commentContainer}>
-            <View style={styles.commentsList}>
-              <Text style={styles.commentUser}>{item.username}:</Text>
-              <Text style={styles.CommentContent}>{item.comment}</Text>
-              <Text style={styles.CommnetCreationDate}>
-                {item.creation_date}
+    <KeyboardAvoidingView
+      style={{ flex: 1, flexDirection: "column", justifyContent: "center" }}
+      behavior="padding"
+      enabled
+      keyboardVerticalOffset={100}
+    >
+      <View style={styles.row}>
+        <FlatList
+          data={comments}
+          // horizontal={true}
+          keyExtractor={(results) => results.comment}
+          removeClippedSubviews={false}
+          renderItem={({ item }) => {
+            return (
+              <View style={styles.commentContainer}>
+                <View style={styles.commentsList}>
+                  <Text style={styles.commentUser}>{item.username}:</Text>
+                  <Text style={styles.CommentContent}>{item.comment}</Text>
+                  <Text style={styles.CommnetCreationDate}>
+                    {item.creation_date}
+                  </Text>
+                </View>
+              </View>
+            );
+          }}
+          ListHeaderComponent={
+            <>
+              <Text style={styles.recipeName}>
+                {" "}
+                {singleRecipeDetail.strMeal}
               </Text>
-            </View>
-          </View>
-        );
-      }}
-      ListHeaderComponent={() => (
-        <>
-          <Text style={styles.recipeName}> {singleRecipeDetail.strMeal}</Text>
-          <Image
-            style={styles.image}
-            source={{ uri: singleRecipeDetail.strMealThumb }}
-          />
-          <Text style={styles.ingredientTitle}>Main Ingredients: </Text>
-          <Text style={styles.ingredents}>
-            {"\u2022"} {singleRecipeDetail.strIngredient1}:{" "}
-            {singleRecipeDetail.strMeasure1}
-            {"\n"}
-            {"\u2022"} {singleRecipeDetail.strIngredient2}:{" "}
-            {singleRecipeDetail.strMeasure2}
-            {"\n"}
-            {"\u2022"} {singleRecipeDetail.strIngredient3}:{" "}
-            {singleRecipeDetail.strMeasure3}
-            {"\n"}
-            {"\u2022"} {singleRecipeDetail.strIngredient4}:{" "}
-            {singleRecipeDetail.strMeasure4}
-            {"\n"}
-            {"\u2022"} {singleRecipeDetail.strIngredient5}:{" "}
-            {singleRecipeDetail.strMeasure5}
-            {"\n"}
-            {"\u2022"} {singleRecipeDetail.strIngredient6}:{" "}
-            {singleRecipeDetail.strMeasure6}
-          </Text>
-          <Text style={styles.ingredientTitle}>Steps to follow:</Text>
-          <Text style={styles.recipeInstructionText}>
-            {singleRecipeDetail.strInstructions}
-          </Text>
-          {singleRecipeDetail.strTags ? (
-            <View>
-              <Text style={styles.ingredientTitle}>Tags: </Text>
-              {/* put sapce in between commas */}
+              <Image
+                style={styles.image}
+                source={{ uri: singleRecipeDetail.strMealThumb }}
+              />
+              <Text style={styles.ingredientTitle}>Main Ingredients: </Text>
+              <View style={styles.likeLayoutButtonContainer}>
+                <TouchableOpacity onPress={handleLike}>
+                  <Image
+                    style={styles.likeView}
+                    source={require("../../assets/Images/likePlain.png")}
+                  />
+                </TouchableOpacity>
+                <Text style={styles.likeCount}>{likeCountText}</Text>
+              </View>
+
               <Text style={styles.ingredents}>
-                {singleRecipeDetail.strTags.split(",").join(", ")}{" "}
+                {"\u2022"} {singleRecipeDetail.strIngredient1}:{" "}
+                {singleRecipeDetail.strMeasure1}
+                {"\n"}
+                {"\u2022"} {singleRecipeDetail.strIngredient2}:{" "}
+                {singleRecipeDetail.strMeasure2}
+                {"\n"}
+                {"\u2022"} {singleRecipeDetail.strIngredient3}:{" "}
+                {singleRecipeDetail.strMeasure3}
+                {"\n"}
+                {"\u2022"} {singleRecipeDetail.strIngredient4}:{" "}
+                {singleRecipeDetail.strMeasure4}
+                {"\n"}
+                {"\u2022"} {singleRecipeDetail.strIngredient5}:{" "}
+                {singleRecipeDetail.strMeasure5}
+                {"\n"}
+                {"\u2022"} {singleRecipeDetail.strIngredient6}:{" "}
+                {singleRecipeDetail.strMeasure6}
               </Text>
-            </View>
-          ) : null}
-          <View style={styles.bottomItems}>
-            {/* <TouchableOpacity
+              <Text style={styles.ingredientTitle}>Steps to follow:</Text>
+              <Text style={styles.recipeInstructionText}>
+                {singleRecipeDetail.strInstructions}
+              </Text>
+              {singleRecipeDetail.strTags ? (
+                <View>
+                  <Text style={styles.ingredientTitle}>Tags: </Text>
+                  {/* put sapce in between commas */}
+                  <Text style={styles.ingredents}>
+                    {singleRecipeDetail.strTags.split(",").join(", ")}{" "}
+                  </Text>
+                </View>
+              ) : null}
+              <View style={styles.bottomItems}>
+                {/* <TouchableOpacity
     style={styles.saveButton}
     onPress={() => {
       if (isDisabled == true) {
@@ -147,29 +213,29 @@ const RecipeDetail = ({ navigation }) => {
       />
     )}
   </TouchableOpacity> */}
-            <TouchableOpacity
-              style={styles.startCook}
-              onPress={() =>
-                navigation.navigate("WebViewScreen", {
-                  urlLink: singleRecipeDetail.strYoutube,
-                })
-              }
-              disabled={singleRecipeDetail.strYoutube ? false : true}
-              // activeOpacity={singleRecipeDetail.strYoutube ? 1 : 0.5}
-            >
-              <Text style={styles.StartCookText}>View Cooking Video</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.commentView}>
-            {comments && comments.length ? (
-              <Text style={styles.commentsTitle}>
-                Comments({comments.length})
-              </Text>
-            ) : (
-              <Text style={styles.commentsTitle}>Comments(0)</Text>
-            )}
+                <TouchableOpacity
+                  style={styles.startCook}
+                  onPress={() =>
+                    navigation.navigate("WebViewScreen", {
+                      urlLink: singleRecipeDetail.strYoutube,
+                    })
+                  }
+                  disabled={singleRecipeDetail.strYoutube ? false : true}
+                  // activeOpacity={singleRecipeDetail.strYoutube ? 1 : 0.5}
+                >
+                  <Text style={styles.StartCookText}>View Cooking Video</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.commentView}>
+                {comments && comments.length ? (
+                  <Text style={styles.commentsTitle}>
+                    Comments({comments.length})
+                  </Text>
+                ) : (
+                  <Text style={styles.commentsTitle}>Comments(0)</Text>
+                )}
 
-            {/* <FlatList
+                {/* <FlatList
     data={comments}
     // horizontal={true}
     keyExtractor={(results) => results.comment}
@@ -187,35 +253,43 @@ const RecipeDetail = ({ navigation }) => {
       );
     }}
   /> */}
-          </View>
-        </>
-      )}
-      ListFooterComponent={() => (
-        <>
-          <View style={styles.addCommentsConatiner}>
-            <Text style={styles.AddNewCommentTitle}>Add New Comment</Text>
-            <TextInput
-              style={styles.commenterName}
-              placeholder="Your Name"
-              value={commenterName}
-              onChangeText={setCommenterName}
-            />
-            <TextInput
-              style={styles.enterComment}
-              placeholder="Your Insights"
-              value={comment}
-              onChangeText={setComment}
-            />
-            <TouchableOpacity
-              style={styles.startCook}
-              onPress={() => handleOnPress(id, commenterName, comment)}
-            >
-              <Text style={styles.StartCookText}>Submit</Text>
-            </TouchableOpacity>
-          </View>
-        </>
-      )}
-    />
+              </View>
+            </>
+          }
+          ListFooterComponent={
+            <>
+              <View style={styles.addCommentsConatiner}>
+                <Text style={styles.AddNewCommentTitle}>Add New Comment</Text>
+                <TextInput
+                  style={styles.commenterName}
+                  placeholder="Your Name"
+                  // value={commenterName}
+                  // onChangeText={setCommenterName}
+                  autoCorrect={false}
+                  value={commenterName}
+                  onChangeText={setCommenterName}
+                />
+                <TextInput
+                  style={styles.enterComment}
+                  placeholder="Your Insights"
+                  value={comment}
+                  onChangeText={setComment}
+                  autoCorrect={false}
+                  multiline={true}
+                />
+                <TouchableOpacity
+                  style={styles.startCook}
+                  onPress={() => handleOnPress(id, commenterName, comment)}
+                >
+                  <Text style={styles.StartCookText}>Submit</Text>
+                </TouchableOpacity>
+              </View>
+            </>
+          }
+        />
+      </View>
+    </KeyboardAvoidingView>
+
     // </SafeAreaView>
   );
 };
@@ -262,13 +336,13 @@ const styles = StyleSheet.create({
   startCook: {
     width: 250,
     height: 50,
-    backgroundColor: "black",
+    backgroundColor: theamColor,
     borderRadius: 16,
     alignSelf: "center",
     justifyContent: "center",
   },
   StartCookText: {
-    color: "#ffff",
+    color: "#000000",
     alignSelf: "center",
     fontSize: 20,
     fontWeight: "bold",
@@ -320,6 +394,7 @@ const styles = StyleSheet.create({
   },
   commentContainer: {
     padding: 10,
+    alignItems: "center",
   },
   AddNewCommentTitle: {
     alignSelf: "center",
@@ -357,6 +432,22 @@ const styles = StyleSheet.create({
   addCommentsConatiner: {
     alignItems: "center",
     margin: 20,
+  },
+  likeView: {
+    width: 30,
+    height: 30,
+  },
+  likeLayoutButtonContainer: {
+    // margin: 10,
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    marginTop: -35,
+    marginRight: 20,
+    alignItems: "center",
+  },
+  likeCount: {
+    padding: 10,
+    fontSize: 20,
   },
 });
 

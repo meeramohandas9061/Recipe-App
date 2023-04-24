@@ -8,6 +8,7 @@ import {
   Image,
   ImageBackground,
   Dimensions,
+  Button,
 } from "react-native";
 import RecipeTile from "../Components/RecipeTile";
 import RecipeCategory from "../Components/RecipeCategory";
@@ -15,6 +16,7 @@ import SearchBar from "../Components/SearchBar";
 import { auth } from "../Services/Firebase";
 import AreaList from "../Components/AreaList";
 import IngredientsList from "../Components/Ingredients List";
+import Popup from "../Components/PopupComponent";
 
 const HomeScreen = ({ navigation }) => {
   const [recipes, setRecipes] = useState([]);
@@ -24,7 +26,7 @@ const HomeScreen = ({ navigation }) => {
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState({ email: "" });
   const [areas, setAreas] = useState([]);
-
+  const [popUpVisible, setPopUpVisible] = useState(false);
   function onAuthStateChanged(user) {
     setUser(user);
     if (initializing) setInitializing(false);
@@ -33,7 +35,13 @@ const HomeScreen = ({ navigation }) => {
   const signOut = () => {
     auth.signOut().then(() => navigation.navigate("LoginScreen"));
   };
+  const openPopup = () => {
+    setPopUpVisible(true);
+  };
 
+  const closePopup = () => {
+    setPopUpVisible(false);
+  };
   const getRecipieList = () => {
     const apiURL =
       "https://www.themealdb.com/api/json/v1/1/filter.php?a=American";
@@ -99,12 +107,43 @@ const HomeScreen = ({ navigation }) => {
   return (
     <>
       <ScrollView>
-        <TouchableOpacity style={styles.logoutButton} onPress={() => signOut()}>
+        <TouchableOpacity style={styles.logoutButton} onPress={openPopup}>
           <Image
             style={styles.logoutImage}
             source={require("../../assets/Images/logout.png")}
           />
+          <Popup
+            visible={popUpVisible}
+            transparent={true}
+            dismiss={closePopup}
+            margin={"25%"}
+          >
+            <View style={styles.popupContent}>
+              <Text style={{ fontSize: 18 }}>
+                Are you sure you want to logout?
+              </Text>
+              <View style={styles.alternativeLayoutButtonContainer}>
+                <View style={styles.logoutButtonView}>
+                  <TouchableOpacity
+                    style={styles.cancelbuttonStyle}
+                    onPress={() => closePopup()}
+                  >
+                    <Text style={styles.buttonText}>Cancel</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.logoutButtonView}>
+                  <TouchableOpacity
+                    style={styles.logoutbuttonStyle}
+                    onPress={() => signOut()}
+                  >
+                    <Text style={styles.buttonText}>Logout</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </Popup>
         </TouchableOpacity>
+
         <Text style={styles.username}>Hi!</Text>
         <Text style={styles.titleStyle}>What food do you want to cook?</Text>
         <SearchBar
@@ -192,6 +231,51 @@ const styles = StyleSheet.create({
     shadowOffset: { width: -2, height: 5 },
     shadowOpacity: 0.6,
     shadowRadius: 3,
+  },
+  popupButton: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#000",
+    width: 100,
+    height: 50,
+  },
+  popupContent: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    borderColor: "#000",
+    borderWidth: "1px",
+    height: 180,
+  },
+  alternativeLayoutButtonContainer: {
+    margin: 20,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  cancelbuttonStyle: {
+    width: 120,
+    height: 50,
+    backgroundColor: "#72bcd4",
+    borderRadius: 10,
+    justifyContent: "center",
+  },
+  logoutbuttonStyle: {
+    width: 120,
+    height: 50,
+    backgroundColor: "#FFAC1C",
+    borderRadius: 10,
+    justifyContent: "center",
+  },
+  logoutButtonView: {
+    marginTop: 20,
+    marginLeft: 20,
+  },
+
+  buttonText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#ffff",
+    alignSelf: "center",
   },
 });
 

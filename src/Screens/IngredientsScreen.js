@@ -1,33 +1,39 @@
-import React, {useEffect, useState} from "react";
-import { View, Text, TouchableOpacity, StyleSheet, ImageBackground } from "react-native";
-import { FlatGrid } from 'react-native-super-grid';
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ImageBackground,
+} from "react-native";
+import { FlatGrid } from "react-native-super-grid";
+import { theamColor } from "../Utils/Global";
 
-export default function IngredientScreen({navigation}) {
-    const [IngredientList, setIngredientList] = useState([]);
+export default function IngredientScreen({ navigation }) {
+  const [IngredientList, setIngredientList] = useState([]);
 
-    const generateColor = () => {
-        const randomColor = Math.floor(Math.random() * 16777215)
-          .toString(16)
-          .padStart(6, '0');
-        return `#${randomColor}`;
-      };
-    const getIngredientsList = () => {
-        const apiURL =
-          "https://www.themealdb.com/api/json/v1/1/list.php?i=list"
-          console.log(apiURL);
-        fetch(apiURL)
-          .then((response) => response.json())
-          .then((responseJson) => {
-            setIngredientList(responseJson.meals);
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      };
+  const generateColor = () => {
+    const randomColor = Math.floor(Math.random() * 16777215)
+      .toString(16)
+      .padStart(6, "0");
+    return `#${randomColor}`;
+  };
+  const getIngredientsList = () => {
+    const apiURL = "https://www.themealdb.com/api/json/v1/1/list.php?i=list";
+    console.log(apiURL);
+    fetch(apiURL)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        setIngredientList(responseJson.meals);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
-      useEffect(() => {
-        getIngredientsList();
-      }, []);
+  useEffect(() => {
+    getIngredientsList();
+  }, []);
 
   return (
     <FlatGrid
@@ -39,16 +45,15 @@ export default function IngredientScreen({navigation}) {
       spacing={10}
       renderItem={({ item }) => (
         <TouchableOpacity
-            onPress={()=> 
-                 navigation.navigate('CategoryDetail', {strCategory: item.strIngredient}) 
-              }
-            >
-        <View style={[styles.itemContainer, {backgroundColor: "black"}]}>
-            
+          onPress={() =>
+            navigation.navigate("CategoryDetail", {
+              strCategory: item.strIngredient,
+            })
+          }
+        >
+          <View style={[styles.itemContainer, { backgroundColor: theamColor }]}>
             <Text style={styles.itemName}>{item.strIngredient}</Text>
-            
-           
-        </View>
+          </View>
         </TouchableOpacity>
       )}
     />
@@ -61,21 +66,21 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   itemContainer: {
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
     borderRadius: 5,
     padding: 10,
     height: 150,
     borderWidth: 2,
-    borderColor: "#9b59b6"
+    borderColor: "#000000",
   },
   itemName: {
     fontSize: 18,
-    color: '#ffff',
-    fontWeight: '600',
+    color: "#000000",
+    fontWeight: "600",
   },
   itemCode: {
-    fontWeight: '600',
+    fontWeight: "600",
     fontSize: 12,
-    color: '#ffff',
+    color: "#ffff",
   },
 });
