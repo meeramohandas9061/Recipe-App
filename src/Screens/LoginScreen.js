@@ -105,6 +105,13 @@ const LoginScreen = ({ navigation }) => {
             <Text style={styles.registerButtonText}>Register</Text>
           </TouchableOpacity>
         </View>
+        <View style={[styles.forgotPasswordView, styles.shadowProp]}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("ForgotPasswordScreen")}
+          >
+            <Text style={styles.accountView}>Forgot password</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -198,6 +205,10 @@ const styles = StyleSheet.create({
   registerView: {
     flexDirection: "row",
     padding: 20,
+    marginTop: 10,
+  },
+  forgotPasswordView: {
+    marginTop: 10,
   },
   accountView: {
     fontSize: 18,

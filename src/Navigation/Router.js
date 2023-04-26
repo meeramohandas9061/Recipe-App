@@ -9,6 +9,7 @@ import SignUpScreen from "../Screens/SignUpScreen";
 import HomeScreen from "../Screens/HomeScreen";
 import AreaRecipeList from "../Screens/AreaRecipeList";
 import IngredientScreen from "../Screens/IngredientsScreen";
+import ForgotPasswordScreen from "../Screens/ForgotPasswordScreen";
 
 const screens = {
   LaunchScreen: {
@@ -67,6 +68,12 @@ const screens = {
   },
   IngredientScreen: {
     screen: IngredientScreen,
+    navigationOptions: {
+      title: "",
+    },
+  },
+  ForgotPasswordScreen: {
+    screen: ForgotPasswordScreen,
     navigationOptions: {
       title: "",
     },

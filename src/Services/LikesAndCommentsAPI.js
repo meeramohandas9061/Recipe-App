@@ -6,7 +6,6 @@ const getLikes = async () => {
     "https://us-central1-involvement-api.cloudfunctions.net/capstoneApi/apps/YDk6ZvYJ9bRgBt60cLN9/likes"
   );
   const responseJSON = await responseData.json();
-  console.log("get comment response data********************", responseJSON);
   return responseJSON;
 };
 
@@ -26,7 +25,6 @@ const postComment = async (itemId, name, message, setPosted) => {
     }
   );
   const responseText = await response.text();
-  console.log("Post comment response data********************", responseText);
   setPosted(true);
   return responseText;
 };
@@ -45,8 +43,6 @@ const postLike = async (itemId) => {
     }
   );
   const responseText = await response.text();
-  console.log("Like recipe response data********************", responseText);
-  console.log("itemId", itemId);
   return responseText;
 };
 

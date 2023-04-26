@@ -10,6 +10,7 @@ import {
   FlatList,
   TextInput,
   KeyboardAvoidingView,
+  ImageBackground,
 } from "react-native";
 import { WebView } from "react-native-webview";
 import { withNavigation } from "react-navigation";
@@ -19,7 +20,7 @@ import {
   postComment,
   postLike,
 } from "../Services/LikesAndCommentsAPI";
-import { theamColor } from "../Utils/Global";
+import { shadowProp, theamColor } from "../Utils/Global";
 
 const RecipeDetail = ({ navigation }) => {
   let id = navigation.getParam("id");
@@ -31,7 +32,7 @@ const RecipeDetail = ({ navigation }) => {
   const [comment, setComment] = useState("");
   const [isPosted, setPosted] = useState(false);
   const [showAppOptions, setShowAppOptions] = useState(false);
-  // const [like, setLike] = useState(false);
+  const [newLike, setNewLike] = useState(false);
   const [likes, setLikes] = useState([]);
   const [likeCount, setLikeCount] = useState(0);
 
@@ -79,22 +80,18 @@ const RecipeDetail = ({ navigation }) => {
     });
     if (found) {
       setLikeCount(found.likes);
+      setNewLike(true);
     }
-    console.log("found", found);
   };
 
   const handleLike = async () => {
     await postLike(id);
-    console.log("id of currently visible item", id);
-    console.log(typeof id);
     const likes = await getLikes();
-    console.log("likes", likes);
     setLikes(likes);
-    getLIkesCount();
+    setNewLike(true);
   };
 
   useEffect(() => {
-    console.log("isposted...................", isPosted);
     if (isPosted) {
       getComments(id);
       setPosted(false);
@@ -104,14 +101,15 @@ const RecipeDetail = ({ navigation }) => {
   useEffect(() => {
     getRecipeDetail();
     getComments(id);
-    // getLikesResponseData = getLikes();
     (async () => {
       const likes = await getLikes();
-      console.log("likes", likes);
       setLikes(likes);
     })();
-    getLIkesCount();
   }, []);
+
+  useEffect(() => {
+    getLIkesCount();
+  }, [likes]);
 
   console.log(singleRecipeDetail);
   return (
@@ -147,10 +145,27 @@ const RecipeDetail = ({ navigation }) => {
                 {" "}
                 {singleRecipeDetail.strMeal}
               </Text>
-              <Image
-                style={styles.image}
-                source={{ uri: singleRecipeDetail.strMealThumb }}
-              />
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("WebViewScreen", {
+                    urlLink: singleRecipeDetail.strYoutube,
+                  })
+                }
+              >
+                <ImageBackground
+                  style={[styles.image, shadowProp]}
+                  imageStyle={{ borderRadius: 6 }}
+                  source={{ uri: singleRecipeDetail.strMealThumb }}
+                >
+                  {singleRecipeDetail.strYoutube ? (
+                    <Image
+                      source={require("../../assets/Images/play.png")}
+                      style={{ width: 100, height: 100 }}
+                    ></Image>
+                  ) : null}
+                </ImageBackground>
+              </TouchableOpacity>
+
               <Text style={styles.ingredientTitle}>Main Ingredients: </Text>
               <View style={styles.likeLayoutButtonContainer}>
                 <TouchableOpacity
@@ -158,10 +173,17 @@ const RecipeDetail = ({ navigation }) => {
                     await handleLike();
                   }}
                 >
-                  <Image
-                    style={styles.likeView}
-                    source={require("../../assets/Images/likePlain.png")}
-                  />
+                  {newLike ? (
+                    <Image
+                      style={styles.likeView}
+                      source={require("../../assets/Images/like.png")}
+                    />
+                  ) : (
+                    <Image
+                      style={styles.likeView}
+                      source={require("../../assets/Images/likePlain.png")}
+                    />
+                  )}
                 </TouchableOpacity>
                 <Text style={styles.likeCount}>{likeCount}</Text>
               </View>
@@ -221,7 +243,7 @@ const RecipeDetail = ({ navigation }) => {
       />
     )}
   </TouchableOpacity> */}
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   style={styles.startCook}
                   onPress={() =>
                     navigation.navigate("WebViewScreen", {
@@ -232,7 +254,7 @@ const RecipeDetail = ({ navigation }) => {
                   // activeOpacity={singleRecipeDetail.strYoutube ? 1 : 0.5}
                 >
                   <Text style={styles.StartCookText}>View Cooking Video</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
               <View style={styles.commentView}>
                 {comments && comments.length ? (
@@ -336,6 +358,10 @@ const styles = StyleSheet.create({
     width: 350,
     alignSelf: "center",
     borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    opacity: 0.9,
+    backgroundColor: "black",
   },
   ingredents: {
     fontSize: 15,
@@ -376,6 +402,7 @@ const styles = StyleSheet.create({
   commentView: {
     alignItems: "center",
     padding: 10,
+    marginTop: -20,
   },
   commentsList: {
     borderColor: 1,

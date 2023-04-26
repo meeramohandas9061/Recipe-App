@@ -149,7 +149,9 @@ const HomeScreen = ({ navigation }) => {
         <SearchBar
           searchTerm={searchTerm}
           onChangeText={setSearch}
-          ontermSubmit={() => getSearchFoodList(searchTerm)}
+          ontermSubmit={() => {
+            searchTerm ? getSearchFoodList(searchTerm) : getRecipieList();
+          }}
         />
         <RecipeCategory categoryData={mealCategory} />
         <RecipeTile data={recipes} />
